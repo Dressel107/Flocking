@@ -12,6 +12,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.instancing.InstancedNode;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * This class controls and manages all boids within a flock (swarm)
  * @author philipp lensing
@@ -23,6 +24,7 @@ public class Flock {
     private Node scene;
     private InstancedNode instancedNode;
     private List<Boid> boids;
+    
     
     /**
      * 
@@ -98,6 +100,7 @@ public class Flock {
         return geometry;
     }
 
+    /*
     private Vector3f giveCohesion (List<Boid> flock, Boid a){
         Vector3f center = Vector3f.ZERO;
         for (Boid b : flock){
@@ -106,4 +109,24 @@ public class Flock {
         center = center.mult(1/flock.size());
         return center.subtract(a.position);
     }
+    */
+    
+    
+    private Vector3f giveCohesion (List<Boid> flock, Boid a){
+        Vector3f center = Vector3f.ZERO;
+        for(int i=0; i < boids.size(); i = i +logOfFlockSize(flock)){
+            center = center.add(flock.get(i).position);
+        }
+        
+         
+        center = center.mult(1/flock.size());
+        return center.subtract(a.position);
+    }
+    
+    
+    private int logOfFlockSize(List<Boid> flock){
+        return (int)Math.log(boids.size());
+    }
+    
+    
 }
