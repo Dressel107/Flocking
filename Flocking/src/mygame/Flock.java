@@ -59,7 +59,8 @@ public class Flock {
             // alignment, 
             // cohesion, and
             // further forces..
-            Vector3f netAccelarationForBoid = boid.position.negate(); // accelaration=boid.position.negate()) means that there is a permanent acceleration towards the origin of the coordinate system (0,0,0) which decreases if the distance of the boid to origin decreases.
+            Vector3f c = giveCohesion(boids, boid);
+            Vector3f netAccelarationForBoid = c.mult(1.0f);//boid.position.negate(); // accelaration=boid.position.negate()) means that there is a permanent acceleration towards the origin of the coordinate system (0,0,0) which decreases if the distance of the boid to origin decreases.
 
 
             boid.update(netAccelarationForBoid, dtime); 
@@ -95,7 +96,14 @@ public class Flock {
         geometry.setMaterial(boidMaterial);
         instancedNode.attachChild(geometry);
         return geometry;
-    }    
+    }
 
-    
+    private Vector3f giveCohesion (List<Boid> flock, Boid a){
+        Vector3f center = Vector3f.ZERO;
+        for (Boid b : flock){
+            center = center.add(b.position);
+        }
+        center = center.mult(1/flock.size());
+        return center.subtract(a.position);
+    }
 }
